@@ -1,0 +1,16 @@
+{
+    "cmake.sourceDirectory": "C:/Users/LiaoChaoMing/Desktop/code/liao_libiao_code",
+
+    // ARM GCC (arm-none-eabi-) is not shipped in the STM32 extension bundles,
+    // so the compiler directory must be injected into the CMake Tools environment.
+    // Workspace-level cmake.environment REPLACES the user-level one, so the STM32
+    // extension paths from the user settings are repeated here, plus:
+    //   - C:\SysGCC\arm-eabi\bin  : arm-none-eabi-gcc / g++ / gdb
+    //   - VS2022 bundled CMake + Ninja : required by the "Ninja" generator in CMakePresets.json
+    "cmake.environment": {
+        "PATH": "c:/Users/LiaoChaoMing/.vscode/extensions/stmicroelectronics.stm32cube-ide-build-cmake-1.47.0-win32-x64/resources/cube-cmake/win32/x86_64;c:\\Users\\LiaoChaoMing\\.vscode\\extensions\\stmicroelectronics.stm32cube-ide-core-1.5.0-win32-x64\\resources\\binaries\\win32\\x86_64;C:\\SysGCC\\arm-eabi\\bin;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;${env:PATH}"
+    },
+
+    "cmake.configureOnOpen": true,
+    "cmake.exportCompileCommandsFile": true
+}

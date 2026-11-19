@@ -1,0 +1,55 @@
+# ---- 构建产物 ----
+build/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+*.o
+*.obj
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.su
+
+# ---- IDE / 编辑器状态 ----
+.vs/
+.vscode/ipch/
+*.vsidx
+*.wsuo
+*.VC.db
+*.VC.VC.opendb
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+.vscode/*.log
+gdbClient_log.txt
+stlinkgdbserver_log.txt
+
+# ---- VisualGDB ----
+*.visualgdb
+VisualGDB/
+.vgdbsettings
+*.vgdbsettings
+
+# ---- CMake 中间产物 ----
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+.ninja_deps
+.ninja_log
+!cmake/*.cmake
+
+# ---- STM32CubeMX 备份 ----
+*.mxproject.bak
+*_backup/
+Backup*/
+
+# ---- 编译数据库 / 索引 ----
+.cache/
+.ccls-cache/
+.clangd/
+compile_commands.json

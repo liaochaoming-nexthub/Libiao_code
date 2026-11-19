@@ -1,0 +1,74 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // ==========================================================================
+            // DAPLink / CMSIS-DAP 调试  (Fanx-Tek DAPLink, VID 0D28:0204, CMSIS-DAP v2)
+            // ==========================================================================
+            // 依据 stm32cube-ide-debug-generic-gdbserver 源码逆向得到的硬性约束:
+            //   1. serverExe 是【白名单】, 只接受 "openocd" / "ST-LINK_gdbserver" /
+            //      "JLinkGDBServerCL"; 其它值直接报 "not known or misspelled"。
+            //   2. serverCwd 必须非空, 并且与 serverExe 拼成可执行文件路径
+            //      (stepSettingsValidation: serverExe/serverCwd 任一为空即抛错)。
+            //   3. deviceName 必须能在 CMSIS pack 中解析, 否则抛 "Device not found"。
+            //      正确值是 pack 里的 Dname = "STM32F103C8",  NOT "STM32F103C8Tx"
+            //      (后者是 CubeMX 的 DeviceId, 校验会失败)。
+            //   4. deviceCore 必须是 "Cortex-M3" (pack 中 Dcore="Cortex-M3")。
+            //   5. serverPort 不能为空; 且 GDB 端口固定, 所以 serverParameters 里
+            //      显式指定端口, 并让适配器跳过端口探测 (serverStartupDelay)。
+            "name": "Debug DAPLink (CMSIS-DAP)",
+            "type": "stgdbtarget",
+            "request": "launch",
+
+            // 注意: 工作区根目录是 code\, 工程在其子目录 liao_libiao_code\ 下
+            "cwd": "${workspaceFolder}/liao_libiao_code",
+            "program": "${workspaceFolder}/liao_libiao_code/build/Debug/liao_libiao_code.elf",
+
+            // 用 ST 扩展 bundle 内的 GDB (15.2), 不依赖 PATH
+            "gdb": "C:/Users/LiaoChaoMing/AppData/Local/STM32Cube/bundles/gnu-gdb-for-stm32/14.3.1+st.2/bin/arm-none-eabi-gdb.exe",
+
+            "deviceName": "STM32F103C8",
+            "deviceCore": "Cortex-M3",
+
+            // ---- OpenOCD 充当 GDB server ----
+            "serverExe": "openocd",
+            "serverCwd": "C:/Users/LiaoChaoMing/AppData/Local/VisualGDB/EmbeddedDebugPackages/com.sysprogs.arm.openocd/bin",
+
+            // 不使用 board/stm32f103c8_blue_pill.cfg: 它把 FLASH_SIZE 强制为
+            // 0x20000 (128K), 而本芯片是 C8 (64K), 会导致 flash 写入越界。
+            "serverParameters": [
+                "-f", "interface/cmsis-dap.cfg",
+                "-f", "target/stm32f1x.cfg",
+                "-c", "adapter speed 1000",
+                "-c", "gdb port 3333"
+            ],
+            "serverHost": "localhost",
+            "serverPort": "3333",
+            // 端口已在上面写死, 不必让适配器去解析 server 的输出
+            "serverStartupDelay": 3000,
+
+            "runEntry": "main",
+            "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${workspaceFolder}/liao_libiao_code/build/Debug/liao_libiao_code.elf",
+                    "imageOffset": "",
+                    "symbolFileName": "${workspaceFolder}/liao_libiao_code/build/Debug/liao_libiao_code.elf",
+                    "symbolOffset": ""
+                }
+            ]
+        },
+        {
+            // 你自己先起好 OpenOCD, 这里只把 GDB 挂上去 (不重启 server)
+            "name": "Attach (OpenOCD 已在运行)",
+            "type": "stgdbtarget",
+            "request": "attach",
+            "cwd": "${workspaceFolder}/liao_libiao_code",
+            "program": "${workspaceFolder}/liao_libiao_code/build/Debug/liao_libiao_code.elf",
+            "gdb": "C:/Users/LiaoChaoMing/AppData/Local/STM32Cube/bundles/gnu-gdb-for-stm32/14.3.1+st.2/bin/arm-none-eabi-gdb.exe",
+            "serverHost": "localhost",
+            "serverPort": "3333",
+            "runEntry": "main"
+        }
+    ]
+}
